@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/LightBlack"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    tools:behavior_peekHeight="200dp"
+    tools:ignore="Overdraw">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_3sdp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:alpha="0.4"
+        android:translationZ="15dp"
+        app:cardBackgroundColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/_20sdp">
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/topContentGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:constraint_referenced_ids="imageView,tvMovieReleaseYear,
+                rvCast,materialTextView4,btnWant,rvMoreLikeThis,materialTextView3,
+                tvMovieCountry,materialTextView2,materialTextView5,btnWatched,tvMovieDuration,
+                tvMovieName,tvMovieRating,tvMovieOverview,rvGenres"
+                tools:visibility="visible" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/movieContentProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:indicatorColor="@color/Salmon"
+                app:layout_constraintBottom_toTopOf="@+id/tvMovieOverview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="invisible" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/movieLoadingErrorMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0"
+                android:fontFamily="@font/sf_pro_regular"
+                android:text="@string/movie_details_error_message"
+                android:textAlignment="center"
+                android:textColor="@color/Salmon"
+                android:textSize="@dimen/_13ssp"
+                app:layout_constraintBottom_toBottomOf="@+id/btnWant"
+                app:layout_constraintEnd_toEndOf="@+id/movieContentProgressBar"
+                app:layout_constraintStart_toStartOf="@+id/movieContentProgressBar"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvMovieName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:ellipsize="middle"
+                android:fontFamily="@font/sf_pro_medium"
+                android:letterSpacing="0.05"
+                android:maxWidth="@dimen/_200sdp"
+                android:maxLines="2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_17ssp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="The Lobster" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:contentDescription="@string/star_icon"
+                android:src="@drawable/ic_star"
+                app:layout_constraintBottom_toBottomOf="@+id/tvMovieRating"
+                app:layout_constraintEnd_toStartOf="@+id/tvMovieRating"
+                app:layout_constraintTop_toTopOf="@+id/tvMovieRating" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvMovieRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:fontFamily="@font/sf_pro_medium"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_17ssp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvMovieName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvMovieName"
+                tools:text="7,2" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvMovieReleaseYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:alpha="0.4"
+                android:fontFamily="@font/sf_pro_regular"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintStart_toStartOf="@+id/tvMovieName"
+                app:layout_constraintTop_toBottomOf="@+id/tvMovieName"
+                tools:text="2015" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvMovieCountry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:alpha="0.4"
+                android:fontFamily="@font/sf_pro_regular"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvMovieReleaseYear"
+                app:layout_constraintStart_toEndOf="@+id/tvMovieReleaseYear"
+                app:layout_constraintTop_toTopOf="@+id/tvMovieReleaseYear"
+                tools:text="Ireland" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvMovieDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:alpha="0.4"
+                android:fontFamily="@font/sf_pro_regular"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvMovieReleaseYear"
+                app:layout_constraintStart_toEndOf="@+id/tvMovieCountry"
+                app:layout_constraintTop_toTopOf="@+id/tvMovieReleaseYear"
+                tools:text="1h 35min" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.4"
+                android:fontFamily="@font/sf_pro_regular"
+                android:text="@string/imdb"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvMovieDuration"
+                app:layout_constraintEnd_toEndOf="@+id/tvMovieRating"
+                app:layout_constraintTop_toTopOf="@+id/tvMovieDuration" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnWant"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:backgroundTint="@color/DarkLateGray"
+                android:text="@string/want"
+                android:textAllCaps="false"
+                android:textSize="@dimen/_14ssp"
+                app:cornerRadius="0dp"
+                app:layout_constraintStart_toStartOf="@+id/tvMovieReleaseYear"
+                app:layout_constraintTop_toBottomOf="@+id/tvMovieReleaseYear"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent=".43" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnWatched"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_50sdp"
+                android:backgroundTint="@color/DarkLateGray"
+                android:text="@string/watched"
+                android:textAllCaps="false"
+                android:textSize="@dimen/_14ssp"
+                app:cornerRadius="0dp"
+                app:layout_constraintEnd_toEndOf="@+id/materialTextView2"
+                app:layout_constraintTop_toTopOf="@+id/btnWant"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent=".43"
+                tools:backgroundTint="@color/Salmon" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvMovieOverview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:alpha="0.5"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnWant"
+                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque venenatis nulla vel urna pellentesque venenatis. Phasellus at leo id erat accumsan lacinia nec in diam. Nullam dictum sodales lectus sed vehicula. Ut lacus erat, auctor sit amet convallis quis, varius sed urna. Sed nec nibh a orci consequat accumsan. Suspendisse at accumsan ante. Duis pharetra ut arcu non ornare. Nullam in augue bibendum, viverra mi eget, commodo sapien. Aenean suscipit sapien lorem, sit amet pellentesque nunc porta vel. Duis non tempor risus, lacinia mattis nulla. Nunc vestibulum tempus aliquam.\n\n In nec est scelerisque, fringilla nulla sit amet, fermentum velit. Ut in nunc gravida, tempor eros sed, ultricies neque. Cras ac eros eget dui vulputate pellentesque porttitor et lacus. Ut maximus, risus et tempus lacinia, lacus metus consequat tellus, at euismod enim magna sit amet nunc. Proin ut diam at arcu rhoncus congue. Vestibulum nec quam et nisi hendrerit ultrices ac ac nisi. In tincidunt, urna non ullamcorper tincidunt, lacus nulla porta nisi, a efficitur libero justo nec lectus." />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:fontFamily="@font/sf_pro_medium"
+                android:text="@string/cast"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintStart_toStartOf="@+id/tvMovieOverview"
+                app:layout_constraintTop_toBottomOf="@+id/tvMovieOverview" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCast"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_15sdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialTextView5"
+                tools:listitem="@layout/item_cast" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:fontFamily="@font/sf_pro_medium"
+                android:text="@string/genres"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rvCast" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvGenres"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_15sdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialTextView3"
+                tools:listitem="@layout/item_genre" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:fontFamily="@font/sf_pro_medium"
+                android:text="@string/more_like_this"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rvGenres" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMoreLikeThis"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_15sdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialTextView4"
+                tools:listitem="@layout/item_similar_movie" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
