@@ -5,17 +5,6 @@ plugins {
     kotlin(Plugins.kapt)
 }
 
-kotlin {
-    sourceSets {
-        debug {
-            kotlin.srcDir("build/generated/ksp/debug/kotlin")
-        }
-        release {
-            kotlin.srcDir("build/generated/ksp/release/kotlin")
-        }
-    }
-}
-
 android {
     compileSdk = Config.compileSdk
 
@@ -45,7 +34,7 @@ android {
         targetCompatibility = Config.javaVersion
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
 
@@ -68,7 +57,7 @@ dependencies {
     implementation(dependencyNotation = Dependencies.expandable_text)
     implementation(dependencyNotation = Dependencies.coil)
     implementation(dependencyNotation = Dependencies.circular_image_view)
-    implementation(group = "com.apachat", name = "swipereveallayout-android", version = "1.1.2")
+    implementation(dependencyNotation = Dependencies.swipe_reveal)
     implementation(dependencyNotation = Dependencies.flexbox_layout)
     implementation(dependencyNotation = Dependencies.youtube_player)
     implementation(dependencyNotation = Dependencies.image_cropper)

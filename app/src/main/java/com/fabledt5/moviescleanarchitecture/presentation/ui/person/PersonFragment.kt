@@ -10,17 +10,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.GridLayoutManager
 import coil.load
-import coil.transform.GrayscaleTransformation
 import com.fabledt5.moviescleanarchitecture.R
 import com.fabledt5.moviescleanarchitecture.databinding.FragmentPersonBinding
+import com.fabledt5.moviescleanarchitecture.domain.model.Resource
 import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.model.items.PersonItem
-import com.fabledt5.moviescleanarchitecture.domain.model.Resource
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.listeners.OnMovieClickListener
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.PersonMoviesListAdapter
+import com.fabledt5.moviescleanarchitecture.presentation.utils.GrayScaleTransformation
 import com.fabledt5.moviescleanarchitecture.presentation.utils.animateAlpha
 import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
 import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
@@ -93,7 +92,7 @@ class PersonFragment : BottomSheetDialogFragment() {
 
     private fun initUi() {
         binding.ivPersonPhoto.load(navArgs.personImage) {
-            transformations(GrayscaleTransformation())
+            transformations(GrayScaleTransformation())
             error(R.drawable.person_placeholder)
         }
 
@@ -116,11 +115,13 @@ class PersonFragment : BottomSheetDialogFragment() {
                     showPersonLoadingError()
                     Timber.e(result.message)
                 }
+
                 is Resource.Success -> {
                     setPersonInfo(result.data)
                     delay(timeMillis = 500)
                     personViewModel.loadAdditionalInfo()
                 }
+
                 else -> Unit
             }
         }.launchWhenStarted(lifecycleScope)
@@ -140,6 +141,7 @@ class PersonFragment : BottomSheetDialogFragment() {
                     showCreditsLoadingError()
                     Timber.e(result.message)
                 }
+
                 is Resource.Success -> showPersonCredits(result.data)
                 else -> Unit
             }

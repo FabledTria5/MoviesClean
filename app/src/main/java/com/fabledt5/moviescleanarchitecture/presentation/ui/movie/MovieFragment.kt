@@ -13,21 +13,26 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
+import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.R
 import com.fabledt5.moviescleanarchitecture.databinding.FragmentMovieBinding
-import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.model.Resource
+import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.util.MovieType
-import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.listeners.OnMovieClickListener
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.listeners.OnPersonClickListener
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.MovieCastListAdapter
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.MovieGenresAdapter
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.SimilarMoviesListAdapter
-import com.fabledt5.moviescleanarchitecture.presentation.utils.*
+import com.fabledt5.moviescleanarchitecture.presentation.utils.MultiViewModelFactory
+import com.fabledt5.moviescleanarchitecture.presentation.utils.animateAlpha
+import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
+import com.fabledt5.moviescleanarchitecture.presentation.utils.hide
+import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
+import com.fabledt5.moviescleanarchitecture.presentation.utils.setBackgroundTint
+import com.fabledt5.moviescleanarchitecture.presentation.utils.setDrawableDivider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import javax.inject.Inject
@@ -67,6 +72,14 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
             binding.movieDetailsBottomSheet.nestedScrollView.fullScroll(View.FOCUS_UP)
         }
     }
+
+    private val movieTitleChangeListener =
+        View.OnLayoutChangeListener { v, _, _, _, bottom, _, _, _, oldBottom ->
+            val heightWas = oldBottom - bottom
+            if (v.height != heightWas) {
+                expandBottomSheet()
+            }
+        }
 
     private val genresAdapter by lazy(LazyThreadSafetyMode.NONE) {
         MovieGenresAdapter()
@@ -118,6 +131,8 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
     private fun setupListeners() = with(binding.movieDetailsBottomSheet) {
         btnWant.setOnClickListener { movieViewModel.addMovieToWanted() }
         btnWatched.setOnClickListener { movieViewModel.addMovieToWatched() }
+
+        tvMovieOverview.addOnLayoutChangeListener(movieTitleChangeListener)
     }
 
     private fun observeBackNavigation() = movieViewModel.canNavigateBack.onEach { canNavigateBack ->
@@ -134,17 +149,8 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
 
         movieViewModel.movieDetails.onEach { result ->
             when (result) {
-                is Resource.Success -> {
-                    showResult(result.data)
-                    delay(timeMillis = 500)
-                    expandBottomSheet()
-                }
-                is Resource.Error -> {
-                    showMovieLoadingError()
-                    delay(timeMillis = 500)
-                    expandBottomSheet()
-                    Timber.e(result.message)
-                }
+                is Resource.Success -> showResult(result.data)
+                is Resource.Error -> showMovieLoadingError()
                 else -> Unit
             }
         }.launchWhenStarted(lifecycleScope)
@@ -165,6 +171,7 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
                     binding.movieDetailsBottomSheet.materialTextView5.hide()
                     binding.movieDetailsBottomSheet.rvCast.hide()
                 }
+
                 else -> Unit
             }
         }.launchWhenStarted(lifecycleScope)
@@ -176,6 +183,7 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
                     binding.movieDetailsBottomSheet.materialTextView4.hide()
                     binding.movieDetailsBottomSheet.rvMoreLikeThis.hide()
                 }
+
                 is Resource.Success -> similarMoviesAdapter.submitList(result.data)
                 else -> Unit
             }

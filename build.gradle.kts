@@ -1,13 +1,18 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply {
+    plugin(Plugins.gradle_versions)
+}
+
 buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
         classpath(dependencyNotation = Plugins.build_gradle)
         classpath(dependencyNotation = Plugins.kotlin_gradle)
         classpath(dependencyNotation = Plugins.safe_args_gradle)
+        classpath(dependencyNotation = Plugins.gradle_dependencies)
     }
 }
 

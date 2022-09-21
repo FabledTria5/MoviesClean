@@ -12,8 +12,11 @@ import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.model.items.PersonItem
 import com.fabledt5.moviescleanarchitecture.domain.util.Constants.API_IMAGE_PREFIX
 import com.fabledt5.moviescleanarchitecture.domain.util.getFirst
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 @JvmName("toDomainTrendingMoviesResponse")
 fun TrendingResponse.toDomain(): List<MovieItem> = trendingResults.map { result ->
@@ -28,7 +31,11 @@ fun MovieDetailsResponse.toDomain(): MovieItem = MovieItem(
     movieId = id,
     moviePoster = "$API_IMAGE_PREFIX$posterPath",
     movieRuntime = getRuntime(runtime),
-    movieRating = voteAverage.toFloat(),
+    movieRating = voteAverage.run {
+        val df = DecimalFormat("#,#")
+        df.roundingMode = RoundingMode.CEILING
+        df.format(this).toFloat()
+    },
     movieRelease = releaseDate.take(n = 4),
     movieTitle = title,
     movieCountry = if (productionCountries.isNotEmpty()) productionCountries[0].iso31661 else "Unknown",

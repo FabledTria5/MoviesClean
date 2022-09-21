@@ -1,47 +1,50 @@
 internal object Versions {
+
     // Core
-    const val android_core = "1.7.0"
-    const val kotlin_stdlib = "1.6.0"
-    const val kotlinx_coroutines_android = "1.5.2"
-    const val gradle = "7.0.4"
+    const val android_core = "1.9.0"
+    const val gradle_versions = "0.42.0"
+    const val kotlin_stdlib = "1.7.10"
+    const val kotlinx_coroutines_android = "1.6.4"
+    const val gradle = "7.3.0"
     const val timber = "5.0.1"
-    const val viewBinding_delegate = "1.5.0-beta01"
-    const val paging = "3.0.1"
-    const val android_fragments = "1.4.0"
+    const val viewBinding_delegate = "1.5.6"
+    const val paging = "3.2.0-alpha02"
+    const val android_fragments = "1.6.0-alpha02"
 
     // Design
-    const val appcompat = "1.3.1"
-    const val material = "1.4.0"
-    const val constraint = "2.1.1"
-    const val ssu = "1.0.6"
+    const val appcompat = "1.6.0-rc01"
+    const val material = "1.8.0-alpha01"
+    const val constraint = "2.2.0-alpha03"
+    const val ssu = "1.1.0"
     const val expandableText = "1.0.5"
-    const val coil = "1.3.2"
+    const val coil = "2.2.1"
     const val flexbox = "3.0.0"
-    const val circular_image_view = "4.3.0"
+    const val circular_image_view = "4.3.1"
     const val youtube_player = "10.0.5"
-    const val image_cropper = "4.0.0"
+    const val image_cropper = "4.3.2"
+    const val swipe_reveal = "1.1.2"
 
     // Retrofit & Gson
     const val retrofit = "2.9.0"
-    const val logging_interceptor = "5.0.0-alpha.2"
+    const val logging_interceptor = "5.0.0-alpha.10"
 
     // Room
-    const val room = "2.4.1"
+    const val room = "2.5.0-alpha03"
 
     // Preferences Datastore
     const val preferences_datastore = "1.0.0"
 
     // Navigation
-    const val navigation = "2.3.5"
+    const val navigation = "2.6.0-alpha01"
 
     // Dagger
-    const val dagger = "2.40.5"
+    const val dagger = "2.43.2"
 
     // Testing
     const val junit = "4.13.2"
     const val androidx_junit = "1.1.3"
     const val espresso_core = "3.4.0"
-    const val mockito_core = "4.0.0"
+    const val mockito_core = "4.8.0"
 }
 
 object Dependencies {
@@ -71,6 +74,7 @@ object Dependencies {
     const val youtube_player =
         "com.github.PierfrancescoSoffritti.android-youtube-player:chromecast-sender:${Versions.youtube_player}"
     const val image_cropper = "com.github.CanHub:Android-Image-Cropper:${Versions.image_cropper}"
+    const val swipe_reveal = "com.apachat:swipereveallayout-android:${Versions.swipe_reveal}"
 
     // Dagger
     const val dagger = "com.google.dagger:dagger:${Versions.dagger}"
@@ -110,7 +114,10 @@ object Plugins {
     const val kotlin_gradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_stdlib}"
     const val safe_args_gradle =
         "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}"
+    const val gradle_dependencies =
+        "com.github.ben-manes:gradle-versions-plugin:${Versions.gradle_versions}"
 
+    const val gradle_versions = "com.github.ben-manes.versions"
     const val application = "com.android.application"
     const val kapt = "kapt"
     const val android = "android"

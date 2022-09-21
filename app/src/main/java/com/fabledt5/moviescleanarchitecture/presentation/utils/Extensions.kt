@@ -3,12 +3,11 @@ package com.fabledt5.moviescleanarchitecture.presentation.utils
 import android.content.Context
 import android.view.View
 import android.view.ViewPropertyAnimator
-import android.view.animation.*
+import android.view.animation.LinearInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.datastore.core.DataStore
@@ -16,7 +15,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -55,7 +53,6 @@ fun View.animateAlpha(targetAlpha: Float, duration: Long = 1000): ViewPropertyAn
         .alpha(targetAlpha)
         .setDuration(duration)
         .setStartDelay(0)
-        .setListener(null)
 
 fun View.rotate(angle: Float, duration: Long = 200) = animate()
     .rotationBy(angle)

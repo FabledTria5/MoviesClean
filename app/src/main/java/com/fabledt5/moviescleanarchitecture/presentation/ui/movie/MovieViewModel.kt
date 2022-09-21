@@ -2,10 +2,10 @@ package com.fabledt5.moviescleanarchitecture.presentation.ui.movie
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fabledt5.moviescleanarchitecture.domain.model.Resource
 import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.model.items.PersonItem
-import com.fabledt5.moviescleanarchitecture.domain.model.Resource
-import com.fabledt5.moviescleanarchitecture.domain.use_case.movie_details.MovieUseCaseWrapper
+import com.fabledt5.moviescleanarchitecture.domain.use_case.movie_details.MovieCases
 import com.fabledt5.moviescleanarchitecture.domain.util.MovieType
 import com.fabledt5.moviescleanarchitecture.presentation.model.MovieData
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,11 +13,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Stack
 import javax.inject.Inject
 
-class MovieViewModel @Inject constructor(private val movieUseCaseWrapper: MovieUseCaseWrapper) :
-    ViewModel() {
+class MovieViewModel @Inject constructor(
+    private val movieCases: MovieCases
+) : ViewModel() {
 
     private val moviesStack = Stack<MovieData>()
     private var currentMovieId = -1
@@ -81,13 +82,13 @@ class MovieViewModel @Inject constructor(private val movieUseCaseWrapper: MovieU
 
     fun addMovieToWanted() = viewModelScope.launch {
         (_movieDetails.value as Resource.Success).let {
-            movieUseCaseWrapper.saveMovie(it.data, MovieType.WANT)
+            movieCases.saveMovie(it.data, MovieType.WANT)
         }
     }
 
     fun addMovieToWatched() = viewModelScope.launch {
         (_movieDetails.value as Resource.Success).let {
-            movieUseCaseWrapper.saveMovie(it.data, MovieType.WATCHED)
+            movieCases.saveMovie(it.data, MovieType.WATCHED)
         }
     }
 
@@ -106,27 +107,37 @@ class MovieViewModel @Inject constructor(private val movieUseCaseWrapper: MovieU
     }
 
     private fun getMovieInfo() {
-        movieUseCaseWrapper.getMovieDetails(movieId = currentMovieId).onEach { movie ->
-            _movieDetails.value = movie
-        }.launchIn(viewModelScope)
+        movieCases.getMovieDetails(movieId = currentMovieId)
+            .onEach { movie ->
+                _movieDetails.value = movie
+            }
+            .launchIn(viewModelScope)
 
-        movieUseCaseWrapper.getMovieCast(movieId = currentMovieId).onEach { cast ->
-            _movieCast.value = cast
-        }.launchIn(viewModelScope)
+        movieCases.getMovieCast(movieId = currentMovieId)
+            .onEach { cast ->
+                _movieCast.value = cast
+            }
+            .launchIn(viewModelScope)
 
-        movieUseCaseWrapper.getSimilarMovies(movieId = currentMovieId).onEach { movies ->
-            _similarMovies.value = movies
-        }.launchIn(viewModelScope)
+        movieCases.getSimilarMovies(movieId = currentMovieId)
+            .onEach { movies ->
+                _similarMovies.value = movies
+            }
+            .launchIn(viewModelScope)
 
-        movieUseCaseWrapper.getMovieTrailer(movieId = currentMovieId).onEach { trailerPath ->
-            _movieTrailer.value = trailerPath
-        }.launchIn(viewModelScope)
+        movieCases.getMovieTrailer(movieId = currentMovieId)
+            .onEach { trailerPath ->
+                _movieTrailer.value = trailerPath
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun observeMovieType() =
-        movieUseCaseWrapper.getMovieType(movieId = currentMovieId).onEach { type ->
-            _movieType.value = type
-        }.launchIn(viewModelScope)
+        movieCases.getMovieType(movieId = currentMovieId)
+            .onEach { type ->
+                _movieType.value = type
+            }
+            .launchIn(viewModelScope)
 
     fun onDetach() {
         currentMovieId = -1

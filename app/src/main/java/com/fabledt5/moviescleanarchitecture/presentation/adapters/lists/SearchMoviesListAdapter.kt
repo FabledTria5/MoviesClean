@@ -3,7 +3,6 @@ package com.fabledt5.moviescleanarchitecture.presentation.adapters.lists
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.fabledt5.moviescleanarchitecture.R
