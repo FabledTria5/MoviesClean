@@ -6,17 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.paging.ExperimentalPagingApi
-import com.fabledt5.moviescleanarchitecture.databinding.FragmentFilterOptionsBinding
 import com.fabledt5.moviescleanarchitecture.MainActivity
+import com.fabledt5.moviescleanarchitecture.databinding.FragmentFilterOptionsBinding
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.FilterOptionsListAdapter
 import com.fabledt5.moviescleanarchitecture.presentation.utils.MultiViewModelFactory
 import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class FilterFragment : BottomSheetDialogFragment() {
 
     @Inject

@@ -10,9 +10,7 @@ import com.fabledt5.moviescleanarchitecture.databinding.FragmentHomeBinding
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.pagers.HomePagerAdapter
 import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val binding: FragmentHomeBinding by viewBinding()

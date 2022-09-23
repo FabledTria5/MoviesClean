@@ -1,30 +1,35 @@
 package com.fabledt5.moviescleanarchitecture.presentation.ui.profile
 
 import android.content.Context
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.paging.ExperimentalPagingApi
 import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
+import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.R
 import com.fabledt5.moviescleanarchitecture.databinding.FragmentProfileBinding
 import com.fabledt5.moviescleanarchitecture.domain.model.states.MovieListShape
-import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.pagers.ProfilePagerAdapter
-import com.fabledt5.moviescleanarchitecture.presentation.utils.*
+import com.fabledt5.moviescleanarchitecture.presentation.utils.MultiViewModelFactory
+import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
+import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     @Inject
@@ -50,6 +55,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         override fun onTabReselected(tab: TabLayout.Tab?) = Unit
     }
 
+    private val imageCropper = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful && result.uriContent != null) {
+            profileViewModel.updateUserImage(getCapturedImage(result.uriContent!!))
+        }
+    }
+
     override fun onAttach(context: Context) {
         context.applicationComponent.inject(this)
         super.onAttach(context)
@@ -67,17 +78,18 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun setupListeners() = with(binding) {
-        ivFilterList.setOnClickListener {
-            findNavController().navigate(R.id.openFilterDialog)
-        }
+        ivFilterList.setOnClickListener { findNavController().navigate(R.id.openFilterDialog) }
 
         ivChangeListShape.setOnClickListener { profileViewModel.changeListsShape() }
         ivReverseList.setOnClickListener { profileViewModel.toggleListReverse() }
 
         ivProfilePicture.setOnClickListener {
-            FragmentNavigatorExtras(ivProfilePicture to "userSettingImage").also {
-                findNavController().navigate(R.id.openSettings, null, null, it)
-            }
+            imageCropper.launch(
+                options {
+                    setCropShape(CropImageView.CropShape.OVAL)
+                    setGuidelines(CropImageView.Guidelines.OFF)
+                }
+            )
         }
     }
 
@@ -130,6 +142,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 fallback(R.drawable.ic_profile)
             }
         }.launchWhenStarted(lifecycleScope)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun getCapturedImage(uri: Uri) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        ImageDecoder.decodeBitmap(ImageDecoder.createSource(requireActivity().contentResolver, uri))
+    } else {
+        MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, uri)
     }
 
 }

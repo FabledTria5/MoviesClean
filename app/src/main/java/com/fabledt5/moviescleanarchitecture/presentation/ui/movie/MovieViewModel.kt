@@ -1,30 +1,53 @@
 package com.fabledt5.moviescleanarchitecture.presentation.ui.movie
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.fabledt5.moviescleanarchitecture.domain.model.Resource
 import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.model.items.PersonItem
 import com.fabledt5.moviescleanarchitecture.domain.use_case.movie_details.MovieCases
 import com.fabledt5.moviescleanarchitecture.domain.util.MovieType
-import com.fabledt5.moviescleanarchitecture.presentation.model.MovieData
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Stack
-import javax.inject.Inject
 
-class MovieViewModel @Inject constructor(
+@OptIn(FlowPreview::class)
+class MovieViewModel @AssistedInject constructor(
+    @Assisted movieId: Int,
+    @Assisted moviePoster: String?,
     private val movieCases: MovieCases
 ) : ViewModel() {
 
-    private val moviesStack = Stack<MovieData>()
-    private var currentMovieId = -1
+    @AssistedFactory
+    interface Factory {
+        fun create(movieId: Int, moviePoster: String?): MovieViewModel
+    }
 
-    private val _canNavigateBack = MutableStateFlow(value = false)
-    val canNavigateBack = _canNavigateBack.asStateFlow()
+    companion object {
+        fun provideFactory(
+            assistedFactory: Factory,
+            movieId: Int,
+            moviePoster: String?
+        ) : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(movieId, moviePoster) as T
+            }
+
+        }
+    }
 
     private val _movieDetails = MutableStateFlow<Resource<MovieItem>>(value = Resource.Loading)
     val movieDetails = _movieDetails.asStateFlow()
@@ -46,100 +69,64 @@ class MovieViewModel @Inject constructor(
     private val _movieType = MutableStateFlow(value = MovieType.NONE)
     val movieType = _movieType.asStateFlow()
 
-    fun changeMovie(movieId: Int, moviePoster: String?) {
-        if (currentMovieId == movieId) return
-        else {
-            when (currentMovieId) {
-                -1 -> switchMovie(movieId, moviePoster)
-                else -> {
-                    addCurrentMovieToBackStack()
-                    switchMovie(movieId, moviePoster)
-                }
-            }
-        }
+    init {
+        _moviePoster.update { moviePoster }
+        getMovieInfo(movieId = movieId)
+        observeMovieType(movieId = movieId)
     }
 
-    private fun switchMovie(movieId: Int, moviePoster: String?) {
-        currentMovieId = movieId
-        _moviePoster.value = moviePoster
-        getMovieInfo()
-        observeMovieType()
-    }
-
-    private fun addCurrentMovieToBackStack() {
-        val movieData = MovieData(
-            movieId = currentMovieId,
-            moviePoster = _moviePoster.value,
-            movieType = _movieType.value,
-            movieCast = _movieCast.value,
-            movieDetails = _movieDetails.value,
-            movieTrailer = _movieTrailer.value,
-            similarMovies = _similarMovies.value
-        )
-        moviesStack.push(movieData)
-        _canNavigateBack.value = true
-    }
-
-    fun addMovieToWanted() = viewModelScope.launch {
-        (_movieDetails.value as Resource.Success).let {
+    fun addMovieToWanted() = viewModelScope.launch(Dispatchers.IO) {
+        (_movieDetails.value as? Resource.Success)?.let {
             movieCases.saveMovie(it.data, MovieType.WANT)
         }
     }
 
-    fun addMovieToWatched() = viewModelScope.launch {
-        (_movieDetails.value as Resource.Success).let {
+    fun addMovieToWatched() = viewModelScope.launch(Dispatchers.IO) {
+        (_movieDetails.value as? Resource.Success)?.let {
             movieCases.saveMovie(it.data, MovieType.WATCHED)
         }
     }
 
-    fun getMovieFromBackStack() {
-        val movieData = moviesStack.pop()
-        currentMovieId = movieData.movieId
-        _movieDetails.value = movieData.movieDetails
-        _moviePoster.value = movieData.moviePoster
-        _movieType.value = movieData.movieType
-        _movieCast.value = movieData.movieCast
-        _similarMovies.value = movieData.similarMovies
-        _movieTrailer.value = movieData.movieTrailer
-        observeMovieType()
-
-        if (moviesStack.size == 0) _canNavigateBack.value = false
-    }
-
-    private fun getMovieInfo() {
-        movieCases.getMovieDetails(movieId = currentMovieId)
+    private fun getMovieInfo(movieId: Int) {
+        movieCases.getMovieDetails(movieId = movieId)
+            .debounce(timeoutMillis = 1000)
             .onEach { movie ->
-                _movieDetails.value = movie
+                _movieDetails.update { movie }
             }
+            .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
 
-        movieCases.getMovieCast(movieId = currentMovieId)
+        movieCases.getMovieCast(movieId = movieId)
+            .debounce(timeoutMillis = 1000)
             .onEach { cast ->
-                _movieCast.value = cast
+                _movieCast.update { cast }
             }
+            .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
 
-        movieCases.getSimilarMovies(movieId = currentMovieId)
+        movieCases.getSimilarMovies(movieId = movieId)
+            .debounce(timeoutMillis = 1000)
             .onEach { movies ->
-                _similarMovies.value = movies
+                _similarMovies.update { movies }
             }
+            .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
 
-        movieCases.getMovieTrailer(movieId = currentMovieId)
+        movieCases.getMovieTrailer(movieId = movieId)
+            .debounce(timeoutMillis = 1000)
             .onEach { trailerPath ->
-                _movieTrailer.value = trailerPath
+                _movieTrailer.update { trailerPath }
             }
+            .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
     }
 
-    private fun observeMovieType() =
-        movieCases.getMovieType(movieId = currentMovieId)
+    private fun observeMovieType(movieId: Int) =
+        movieCases.getMovieType(movieId = movieId)
             .onEach { type ->
-                _movieType.value = type
+                _movieType.update { type }
             }
+            .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
 
-    fun onDetach() {
-        currentMovieId = -1
-    }
 }

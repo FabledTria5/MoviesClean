@@ -2,20 +2,18 @@ package com.fabledt5.moviescleanarchitecture.presentation.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.model.Resource
+import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.use_case.trending.GetTrendingMovies
 import com.fabledt5.moviescleanarchitecture.domain.use_case.trending.GetTrendingShows
 import com.fabledt5.moviescleanarchitecture.presentation.utils.network.NetworkStatus
 import com.fabledt5.moviescleanarchitecture.presentation.utils.network.NetworkStatusListener
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class HomeViewModel @Inject constructor(
     private val getTrendingMovies: GetTrendingMovies,
     private val getTrendingShows: GetTrendingShows,

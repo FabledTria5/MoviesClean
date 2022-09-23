@@ -8,23 +8,21 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.R
 import com.fabledt5.moviescleanarchitecture.databinding.FragmentProfilePeopleBinding
-import com.fabledt5.moviescleanarchitecture.domain.model.items.PersonItem
 import com.fabledt5.moviescleanarchitecture.domain.model.Resource
-import com.fabledt5.moviescleanarchitecture.MainActivity
+import com.fabledt5.moviescleanarchitecture.domain.model.items.PersonItem
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.listeners.OnPersonClickListener
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.FavoritePeopleListAdapter
 import com.fabledt5.moviescleanarchitecture.presentation.utils.MultiViewModelFactory
 import com.fabledt5.moviescleanarchitecture.presentation.utils.animateAlpha
 import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
 import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class ProfilePeopleFragment : Fragment(R.layout.fragment_profile_people) {
 
     @Inject
@@ -73,7 +71,6 @@ class ProfilePeopleFragment : Fragment(R.layout.fragment_profile_people) {
         profileViewModel.favoritePersons.onEach { result ->
             when (result) {
                 is Resource.Error -> Timber.e(result.message)
-                is Resource.Loading -> Timber.d("loading")
                 is Resource.Success -> showPersons(result.data)
                 else -> Unit
             }

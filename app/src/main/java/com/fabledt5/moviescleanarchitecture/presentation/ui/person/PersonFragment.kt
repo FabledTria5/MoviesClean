@@ -25,13 +25,11 @@ import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationCompon
 import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
 import com.fabledt5.moviescleanarchitecture.presentation.utils.rotate
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class PersonFragment : BottomSheetDialogFragment() {
 
     @Inject
