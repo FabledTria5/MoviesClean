@@ -16,12 +16,15 @@ import com.fabledt5.moviescleanarchitecture.presentation.adapters.listeners.OnMo
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.listeners.OnPersonClickListener
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.SearchMoviesListAdapter
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.SearchPersonsListAdapter
-import com.fabledt5.moviescleanarchitecture.presentation.utils.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.fabledt5.moviescleanarchitecture.presentation.utils.MultiViewModelFactory
+import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
+import com.fabledt5.moviescleanarchitecture.presentation.utils.hide
+import com.fabledt5.moviescleanarchitecture.presentation.utils.hideKeyboard
+import com.fabledt5.moviescleanarchitecture.presentation.utils.setDrawableDivider
+import com.fabledt5.moviescleanarchitecture.presentation.utils.show
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
     @Inject

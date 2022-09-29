@@ -1,21 +1,21 @@
 package com.fabledt5.moviescleanarchitecture.di
 
 import android.content.Context
-import androidx.paging.ExperimentalPagingApi
-import com.fabledt5.moviescleanarchitecture.di.modules.AppModule
 import com.fabledt5.moviescleanarchitecture.MainActivity
+import com.fabledt5.moviescleanarchitecture.di.modules.AppModule
 import com.fabledt5.moviescleanarchitecture.presentation.ui.home.HomeFragment
 import com.fabledt5.moviescleanarchitecture.presentation.ui.home.MoviesFragment
 import com.fabledt5.moviescleanarchitecture.presentation.ui.movie.MovieFragment
 import com.fabledt5.moviescleanarchitecture.presentation.ui.person.PersonFragment
-import com.fabledt5.moviescleanarchitecture.presentation.ui.profile.*
+import com.fabledt5.moviescleanarchitecture.presentation.ui.profile.FilterFragment
+import com.fabledt5.moviescleanarchitecture.presentation.ui.profile.ProfileFragment
+import com.fabledt5.moviescleanarchitecture.presentation.ui.profile.ProfileMoviesFragment
+import com.fabledt5.moviescleanarchitecture.presentation.ui.profile.ProfilePeopleFragment
 import com.fabledt5.moviescleanarchitecture.presentation.ui.search.SearchFragment
 import dagger.BindsInstance
 import dagger.Component
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Singleton
 
-@ExperimentalCoroutinesApi
 @Component(modules = [AppModule::class])
 @Singleton
 interface AppComponent {
@@ -39,8 +39,6 @@ interface AppComponent {
     fun inject(filterFragment: FilterFragment)
 
     fun inject(profilePeopleFragment: ProfilePeopleFragment)
-
-    fun inject(settingsFragment: SettingsFragment)
 
     @Component.Builder
     interface Builder {

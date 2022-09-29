@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.animation.LinearInterpolator
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
@@ -22,11 +21,9 @@ import com.fabledt5.moviescleanarchitecture.MoviesApplication
 import com.fabledt5.moviescleanarchitecture.di.AppComponent
 import com.fabledt5.moviescleanarchitecture.domain.util.Constants
 import com.google.android.material.button.MaterialButton
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 
-@ExperimentalCoroutinesApi
 val Context.applicationComponent: AppComponent
     get() = when (this) {
         is MoviesApplication -> appComponent
@@ -76,11 +73,6 @@ fun MaterialButton.setBackgroundTint(context: Context, @ColorRes color: Int) {
 fun Fragment.arguments(vararg arguments: Pair<String, Any>): Fragment {
     this.arguments = bundleOf(*arguments)
     return this
-}
-
-fun Fragment.showKeyboard(view: EditText) {
-    val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
 }
 
 fun Fragment.hideKeyboard() {

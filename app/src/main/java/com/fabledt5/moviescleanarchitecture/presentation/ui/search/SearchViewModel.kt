@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModel @Inject constructor(
     private val searchMoviesCase: SearchMovies,
     private val searchPersonsCase: SearchPersons,

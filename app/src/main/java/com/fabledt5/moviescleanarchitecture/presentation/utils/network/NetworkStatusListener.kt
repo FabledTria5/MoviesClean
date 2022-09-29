@@ -7,12 +7,10 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET
 import android.net.NetworkRequest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class NetworkStatusListener @Inject constructor(context: Context) {
 
     private val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager

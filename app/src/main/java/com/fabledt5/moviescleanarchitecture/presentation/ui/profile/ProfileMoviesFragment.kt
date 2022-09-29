@@ -9,24 +9,25 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.R
 import com.fabledt5.moviescleanarchitecture.databinding.FragmentProfileMoviesBinding
-import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.model.Resource
+import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.util.MovieType
-import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.listeners.OnMovieClickListener
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.ProfileMoviesListAdapter
-import com.fabledt5.moviescleanarchitecture.presentation.utils.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.fabledt5.moviescleanarchitecture.presentation.utils.MultiViewModelFactory
+import com.fabledt5.moviescleanarchitecture.presentation.utils.animateAlpha
+import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
+import com.fabledt5.moviescleanarchitecture.presentation.utils.arguments
+import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class ProfileMoviesFragment : Fragment(R.layout.fragment_profile_movies) {
 
     companion object {
@@ -97,6 +98,7 @@ class ProfileMoviesFragment : Fragment(R.layout.fragment_profile_movies) {
                     showEmptyList()
                     Timber.e(result.message)
                 }
+
                 is Resource.Success -> showMovies(result.data)
                 else -> Unit
             }

@@ -6,12 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.fabledt5.moviescleanarchitecture.R
 import com.fabledt5.moviescleanarchitecture.databinding.ActivityMainBinding
-import com.fabledt5.moviescleanarchitecture.presentation.ui.movie.MovieFragment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private val binding: ActivityMainBinding by viewBinding()
@@ -33,6 +29,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 R.id.homeFragment, R.id.searchFragment, R.id.profileFragment, R.id.filterFragment -> {
                     binding.bottomNavigationView.visibility = View.VISIBLE
                 }
+
                 else -> binding.bottomNavigationView.visibility = View.GONE
             }
         }

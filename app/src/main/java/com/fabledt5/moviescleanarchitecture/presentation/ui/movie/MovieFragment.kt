@@ -3,7 +3,6 @@ package com.fabledt5.moviescleanarchitecture.presentation.ui.movie
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -13,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
-import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.R
 import com.fabledt5.moviescleanarchitecture.databinding.FragmentMovieBinding
 import com.fabledt5.moviescleanarchitecture.domain.model.Resource
@@ -24,36 +22,42 @@ import com.fabledt5.moviescleanarchitecture.presentation.adapters.listeners.OnPe
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.MovieCastListAdapter
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.MovieGenresAdapter
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.SimilarMoviesListAdapter
-import com.fabledt5.moviescleanarchitecture.presentation.utils.MultiViewModelFactory
 import com.fabledt5.moviescleanarchitecture.presentation.utils.animateAlpha
 import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
 import com.fabledt5.moviescleanarchitecture.presentation.utils.hide
 import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
 import com.fabledt5.moviescleanarchitecture.presentation.utils.setBackgroundTint
 import com.fabledt5.moviescleanarchitecture.presentation.utils.setDrawableDivider
+import com.fabledt5.moviescleanarchitecture.presentation.utils.show
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class MovieFragment : Fragment(R.layout.fragment_movie) {
 
     @Inject
-    lateinit var multiViewModelFactory: MultiViewModelFactory
+    lateinit var movieViewModelFactory: MovieViewModel.Factory
 
     private val binding: FragmentMovieBinding by viewBinding()
     private val navArgs: MovieFragmentArgs by navArgs()
 
     private val movieViewModel by viewModels<MovieViewModel>(
-        ownerProducer = { activity as MainActivity },
-        factoryProducer = { multiViewModelFactory }
+        factoryProducer = {
+            MovieViewModel.provideFactory(
+                movieViewModelFactory,
+                navArgs.movieId,
+                navArgs.moviePoster
+            )
+        }
     )
 
     private val onSimilarMoviesClickListener = object : OnMovieClickListener {
         override fun onMovieClick(movieId: Int, moviePoster: String?) {
-            movieViewModel.changeMovie(movieId, moviePoster)
+            MovieFragmentDirections.actionMovieFragmentSelf(movieId, moviePoster)
+                .also { direction ->
+                    findNavController().navigate(direction)
+                }
         }
     }
 
@@ -66,19 +70,12 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         }
     }
 
-    private val onBackPressedCallback = object : OnBackPressedCallback(false) {
-        override fun handleOnBackPressed() {
-            movieViewModel.getMovieFromBackStack()
-            binding.movieDetailsBottomSheet.nestedScrollView.fullScroll(View.FOCUS_UP)
-        }
-    }
-
     private val movieTitleChangeListener =
-        View.OnLayoutChangeListener { v, _, _, _, bottom, _, _, _, oldBottom ->
-            val heightWas = oldBottom - bottom
-            if (v.height != heightWas) {
-                expandBottomSheet()
+        View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            BottomSheetBehavior.from(binding.movieDetailsBottomSheet.bottomSheet).apply {
+                peekHeight = calculateBottomSheetPeekHeight()
             }
+            setMoviePosterSize()
         }
 
     private val genresAdapter by lazy(LazyThreadSafetyMode.NONE) {
@@ -98,23 +95,10 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         super.onAttach(context)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activity?.onBackPressedDispatcher?.addCallback(this, onBackPressedCallback)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initUi()
         setupListeners()
         observeMovieDetails()
-        observeBackNavigation()
-
-        movieViewModel.changeMovie(movieId = navArgs.movieId, moviePoster = navArgs.moviePoster)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        movieViewModel.onDetach()
     }
 
     private fun initUi() = with(binding.movieDetailsBottomSheet) {
@@ -135,67 +119,68 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         tvMovieOverview.addOnLayoutChangeListener(movieTitleChangeListener)
     }
 
-    private fun observeBackNavigation() = movieViewModel.canNavigateBack.onEach { canNavigateBack ->
-        onBackPressedCallback.isEnabled = canNavigateBack
-    }.launchWhenStarted(lifecycleScope)
-
     private fun observeMovieDetails() {
-        movieViewModel.moviePoster.onEach { poster ->
-            binding.ivImagePoster.load(poster) {
-                crossfade(enable = true)
-                error(R.drawable.poster_placeholder)
-            }
-        }.launchWhenStarted(lifecycleScope)
-
-        movieViewModel.movieDetails.onEach { result ->
-            when (result) {
-                is Resource.Success -> showResult(result.data)
-                is Resource.Error -> showMovieLoadingError()
-                else -> Unit
-            }
-        }.launchWhenStarted(lifecycleScope)
-
-        movieViewModel.movieType.onEach { type ->
-            when (type) {
-                MovieType.WATCHED -> selectWatchButton()
-                MovieType.WANT -> selectWantButton()
-                MovieType.NONE -> clearButtons()
-            }
-        }.launchWhenStarted(lifecycleScope)
-
-        movieViewModel.movieCast.onEach { result ->
-            when (result) {
-                is Resource.Success -> movieCastAdapter.submitList(result.data)
-                is Resource.Error -> {
-                    Timber.e(result.message)
-                    binding.movieDetailsBottomSheet.materialTextView5.hide()
-                    binding.movieDetailsBottomSheet.rvCast.hide()
+        movieViewModel.moviePoster
+            .onEach { poster ->
+                binding.ivImagePoster.load(poster) {
+                    error(R.drawable.poster_placeholder)
                 }
+            }.launchWhenStarted(lifecycleScope)
 
-                else -> Unit
-            }
-        }.launchWhenStarted(lifecycleScope)
-
-        movieViewModel.similarMovies.onEach { result ->
-            when (result) {
-                is Resource.Error -> {
-                    Timber.e(result.message)
-                    binding.movieDetailsBottomSheet.materialTextView4.hide()
-                    binding.movieDetailsBottomSheet.rvMoreLikeThis.hide()
+        movieViewModel.movieDetails
+            .onEach { result ->
+                when (result) {
+                    is Resource.Success -> showResult(result.data)
+                    is Resource.Error -> showMovieLoadingError()
+                    else -> Unit
                 }
+            }.launchWhenStarted(lifecycleScope)
 
-                is Resource.Success -> similarMoviesAdapter.submitList(result.data)
-                else -> Unit
-            }
-        }.launchWhenStarted(lifecycleScope)
+        movieViewModel.movieType
+            .onEach { type ->
+                when (type) {
+                    MovieType.WATCHED -> selectWatchButton()
+                    MovieType.WANT -> selectWantButton()
+                    MovieType.NONE -> clearButtons()
+                }
+            }.launchWhenStarted(lifecycleScope)
 
-        movieViewModel.movieTrailer.onEach { result ->
-            when (result) {
-                is Resource.Error -> Timber.e(result.message)
-                is Resource.Success -> enableTrailerButton(result.data)
-                else -> Unit
-            }
-        }.launchWhenStarted(lifecycleScope)
+        movieViewModel.movieCast
+            .onEach { result ->
+                when (result) {
+                    is Resource.Success -> movieCastAdapter.submitList(result.data)
+                    is Resource.Error -> {
+                        Timber.e(result.message)
+                        binding.movieDetailsBottomSheet.materialTextView5.hide()
+                        binding.movieDetailsBottomSheet.rvCast.hide()
+                    }
+
+                    else -> Unit
+                }
+            }.launchWhenStarted(lifecycleScope)
+
+        movieViewModel.similarMovies
+            .onEach { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        Timber.e(result.message)
+                        binding.movieDetailsBottomSheet.materialTextView4.hide()
+                        binding.movieDetailsBottomSheet.rvMoreLikeThis.hide()
+                    }
+
+                    is Resource.Success -> similarMoviesAdapter.submitList(result.data)
+                    else -> Unit
+                }
+            }.launchWhenStarted(lifecycleScope)
+
+        movieViewModel.movieTrailer
+            .onEach { result ->
+                when (result) {
+                    is Resource.Error -> Timber.e(result.message)
+                    is Resource.Success -> enableTrailerButton(result.data)
+                    else -> Unit
+                }
+            }.launchWhenStarted(lifecycleScope)
     }
 
     private fun showResult(movie: MovieItem?) = with(binding.movieDetailsBottomSheet) {
@@ -219,20 +204,23 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         movieLoadingErrorMessage.animateAlpha(duration = 200, targetAlpha = 1f)
     }
 
+    private fun setMoviePosterSize() {
+        val bottomSheetPeekHeight =
+            BottomSheetBehavior.from(binding.movieDetailsBottomSheet.bottomSheet).peekHeight
+        val screenHeight = resources.displayMetrics.heightPixels
+        val imageAvailableSpace = screenHeight -
+                bottomSheetPeekHeight -
+                resources.getDimension(R.dimen._10sdp).toInt() * 2
+
+        binding.ivImagePoster.layoutParams.height = imageAvailableSpace
+    }
+
     private fun enableTrailerButton(url: String) = with(binding) {
-        civPlayButton.animateAlpha(duration = 200, targetAlpha = 1f)
+        civPlayButton.show()
         civPlayButton.setOnClickListener {
             MovieFragmentDirections.actionMovieFragmentToTrailerFragment(url).also { direction ->
                 findNavController().navigate(direction)
             }
-        }
-    }
-
-    private fun expandBottomSheet() {
-        BottomSheetBehavior.from(binding.movieDetailsBottomSheet.bottomSheet).apply {
-            state = BottomSheetBehavior.STATE_EXPANDED
-            peekHeight = calculateBottomSheetPeekHeight()
-            state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
@@ -255,5 +243,4 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         btnWant.setBackgroundTint(requireContext(), R.color.unselected_button_tint_list)
         btnWatched.setBackgroundTint(requireContext(), R.color.selected_button_tint_list)
     }
-
 }

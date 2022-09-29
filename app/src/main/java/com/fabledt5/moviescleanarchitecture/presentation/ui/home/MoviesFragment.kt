@@ -8,24 +8,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.ExperimentalPagingApi
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.R
 import com.fabledt5.moviescleanarchitecture.databinding.FragmentMoviesBinding
-import com.fabledt5.moviescleanarchitecture.presentation.utils.MultiViewModelFactory
-import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.model.Resource
+import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.util.MediaType
-import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.listeners.OnMovieClickListener
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.HomeMoviesListAdapter
-import com.fabledt5.moviescleanarchitecture.presentation.utils.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.fabledt5.moviescleanarchitecture.presentation.utils.MultiViewModelFactory
+import com.fabledt5.moviescleanarchitecture.presentation.utils.animateAlpha
+import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
+import com.fabledt5.moviescleanarchitecture.presentation.utils.arguments
+import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 class MoviesFragment : Fragment(R.layout.fragment_movies) {
 
     companion object {
@@ -81,10 +81,13 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
                 contentType = MediaType.tv
                 homeViewModel.trendingShows
             }
+
             else -> {
-                Timber.e(message = "Error with received arguments: ${
-                    requireArguments().getString(CONTENT_TYPE)
-                }")
+                Timber.e(
+                    message = "Error with received arguments: ${
+                        requireArguments().getString(CONTENT_TYPE)
+                    }"
+                )
                 return
             }
         }
@@ -100,15 +103,16 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
                 setLoadingFinished()
                 setHasError(true)
             }
+
             is Resource.Loading -> {
                 setLoadingStarted()
                 setHasError(false)
             }
+
             is Resource.Success -> {
                 adapter.submitList(result.data)
                 setLoadingFinished()
             }
-            else -> Unit
         }
     }
 

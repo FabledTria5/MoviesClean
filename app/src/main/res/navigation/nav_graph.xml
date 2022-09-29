@@ -44,11 +44,6 @@
         <action
             android:id="@+id/openFilterDialog"
             app:destination="@id/filterFragment" />
-        <action
-            android:id="@+id/openSettings"
-            app:destination="@id/settingsFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -111,19 +106,14 @@
         android:id="@+id/filterFragment"
         android:name="com.fabledt5.moviescleanarchitecture.presentation.ui.profile.FilterFragment"
         android:label="FilterFragment"
-        tools:layout="@layout/fragment_filter_options"/>
+        tools:layout="@layout/fragment_filter_options" />
     <fragment
         android:id="@+id/trailerFragment"
         android:name="com.fabledt5.moviescleanarchitecture.presentation.ui.movie.TrailerFragment"
         android:label="fragment_trailer"
-        tools:layout="@layout/fragment_trailer" >
+        tools:layout="@layout/fragment_trailer">
         <argument
             android:name="trailer_path"
             app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.fabledt5.moviescleanarchitecture.presentation.ui.profile.SettingsFragment"
-        android:label="SettingsFragment"
-        tools:layout="@layout/fragment_settings"/>
 </navigation>
