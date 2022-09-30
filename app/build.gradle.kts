@@ -47,6 +47,7 @@ dependencies {
     implementation(dependencyNotation = Dependencies.viewBinding_delegate)
     implementation(dependencyNotation = Dependencies.paging)
     implementation(dependencyNotation = Dependencies.android_fragments)
+    implementation(dependencyNotation = Dependencies.core_splash_screen)
 
     // Design
     implementation(dependencyNotation = Dependencies.appcompat)

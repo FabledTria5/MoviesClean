@@ -19,17 +19,16 @@
             android:elevation="10dp"
             android:paddingVertical="@dimen/_10sdp"
             android:scaleType="centerCrop"
-            android:transitionName="moviePosterBig"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.9"
-            tools:src="@drawable/sample" />
+            app:layout_constraintWidth_percent="0.9" />
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/civPlayButton"
             android:layout_width="@dimen/_100sdp"
             android:layout_height="@dimen/_100sdp"
+            android:alpha="0"
             android:background="@drawable/play_button_ripple"
             android:clickable="true"
             android:focusable="true"
@@ -37,7 +36,6 @@
             android:src="@drawable/ic_play"
             android:tint="@color/Salmon"
             android:translationZ="10dp"
-            android:visibility="invisible"
             app:civ_border="false"
             app:civ_circle_color="#20000000"
             app:layout_constraintBottom_toBottomOf="@+id/ivImagePoster"

@@ -3,18 +3,19 @@ internal object Versions {
     // Core
     const val android_core = "1.9.0"
     const val gradle_versions = "0.42.0"
-    const val kotlin_stdlib = "1.7.10"
+    const val kotlin_stdlib = "1.7.20"
     const val kotlinx_coroutines_android = "1.6.4"
     const val gradle = "7.3.0"
     const val timber = "5.0.1"
     const val viewBinding_delegate = "1.5.6"
     const val paging = "3.2.0-alpha02"
     const val android_fragments = "1.6.0-alpha02"
+    const val core_splash_screen = "1.0.0"
 
     // Design
     const val appcompat = "1.6.0-rc01"
     const val material = "1.8.0-alpha01"
-    const val constraint = "2.2.0-alpha03"
+    const val constraint = "2.2.0-alpha04"
     const val ssu = "1.1.0"
     const val expandableText = "1.0.5"
     const val coil = "2.2.1"
@@ -38,7 +39,7 @@ internal object Versions {
     const val navigation = "2.6.0-alpha01"
 
     // Dagger
-    const val dagger = "2.43.2"
+    const val dagger = "2.44"
 
     // Testing
     const val junit = "4.13.2"
@@ -59,6 +60,7 @@ object Dependencies {
         "com.github.kirich1409:viewbindingpropertydelegate:${Versions.viewBinding_delegate}"
     const val paging = "androidx.paging:paging-runtime:${Versions.paging}"
     const val android_fragments = "androidx.fragment:fragment-ktx:${Versions.android_fragments}"
+    const val core_splash_screen = "androidx.core:core-splashscreen:${Versions.core_splash_screen}"
 
     // Design
     const val appcompat = "androidx.appcompat:appcompat:${Versions.appcompat}"

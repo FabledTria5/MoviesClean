@@ -16,8 +16,9 @@ import com.fabledt5.moviescleanarchitecture.presentation.utils.GrayScaleTransfor
 class FavoritePeopleListAdapter(
     private val onPersonClickListener: OnPersonClickListener,
     private val onDeletePersonClicked: (Int) -> Unit
-) :
-    ListAdapter<PersonItem, FavoritePeopleListAdapter.FavoritePeopleListViewHolder>(PersonDiffUtil()) {
+) : ListAdapter<PersonItem, FavoritePeopleListAdapter.FavoritePeopleListViewHolder>(
+    PersonDiffUtil()
+) {
 
     private val viewBinderHelper = ViewBinder()
 

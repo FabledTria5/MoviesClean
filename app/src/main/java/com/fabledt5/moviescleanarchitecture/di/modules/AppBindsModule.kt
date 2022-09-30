@@ -19,31 +19,44 @@ import com.fabledt5.moviescleanarchitecture.domain.repository.UserDataStoreRepos
 import com.fabledt5.moviescleanarchitecture.presentation.ui.home.HomeViewModel
 import com.fabledt5.moviescleanarchitecture.presentation.ui.profile.ProfileViewModel
 import com.fabledt5.moviescleanarchitecture.presentation.ui.search.SearchViewModel
+import com.fabledt5.moviescleanarchitecture.presentation.utils.network.NetworkStatusListener
+import com.fabledt5.moviescleanarchitecture.presentation.utils.network.NetworkStatusListenerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import javax.inject.Singleton
 
 @Module
 interface AppBindsModule {
 
     @Binds
+    @Singleton
     fun bindExploreRepository(exploreRepositoryImpl: ExploreRepositoryImpl): ExploreRepository
 
     @Binds
+    @Singleton
     fun bindDetailsRepository(detailsRepositoryImpl: DetailsRepositoryImpl): DetailsRepository
 
     @Binds
+    @Singleton
     fun bindSearchRepository(searchRepositoryImpl: SearchRepositoryImpl): SearchRepository
 
     @Binds
+    @Singleton
     fun bindProfileRepository(profileRepositoryImpl: ProfileRepositoryImpl): ProfileRepository
 
     @Binds
+    @Singleton
     fun bindProfileMoviesDataStoreRepository(profileMoviesData: ProfileMoviesDataStoreImpl):
             ProfileMoviesDataStoreRepository
 
     @Binds
+    @Singleton
     fun bindUserDataStoreRepository(userDataStoreImpl: UserDataStoreImpl): UserDataStoreRepository
+
+    @Binds
+    @Singleton
+    fun bindNetworkListener(networkStatusListenerImpl: NetworkStatusListenerImpl): NetworkStatusListener
 
     @Binds
     @[IntoMap ViewModelKey(HomeViewModel::class)]

@@ -3,6 +3,7 @@ package com.fabledt5.moviescleanarchitecture
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -13,13 +14,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private val binding: ActivityMainBinding by viewBinding()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
+
         setupNavigation()
     }
 
     private fun setupNavigation() {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navHostFragment = getNavHost(R.id.fragmentContainerView)
         val navController = navHostFragment.navController
 
         binding.bottomNavigationView.setupWithNavController(navController = navController)
@@ -34,4 +36,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             }
         }
     }
+
+    private fun getNavHost(resId: Int) =
+        supportFragmentManager.findFragmentById(resId) as NavHostFragment
+
 }

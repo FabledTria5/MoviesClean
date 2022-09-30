@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +29,6 @@ import com.fabledt5.moviescleanarchitecture.presentation.utils.hide
 import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
 import com.fabledt5.moviescleanarchitecture.presentation.utils.setBackgroundTint
 import com.fabledt5.moviescleanarchitecture.presentation.utils.setDrawableDivider
-import com.fabledt5.moviescleanarchitecture.presentation.utils.show
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
@@ -70,12 +70,11 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         }
     }
 
-    private val movieTitleChangeListener =
-        View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            BottomSheetBehavior.from(binding.movieDetailsBottomSheet.bottomSheet).apply {
-                peekHeight = calculateBottomSheetPeekHeight()
+    private val moviePosterSizeChangeListener =
+        View.OnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
+            if (bottom != top) {
+                binding.civPlayButton.animateAlpha(targetAlpha = 1f)
             }
-            setMoviePosterSize()
         }
 
     private val genresAdapter by lazy(LazyThreadSafetyMode.NONE) {
@@ -116,7 +115,14 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         btnWant.setOnClickListener { movieViewModel.addMovieToWanted() }
         btnWatched.setOnClickListener { movieViewModel.addMovieToWatched() }
 
-        tvMovieOverview.addOnLayoutChangeListener(movieTitleChangeListener)
+        binding.ivImagePoster.addOnLayoutChangeListener(moviePosterSizeChangeListener)
+        
+        tvMovieName.doAfterTextChanged {
+            BottomSheetBehavior.from(binding.movieDetailsBottomSheet.bottomSheet).apply {
+                setPeekHeight(calculateBottomSheetPeekHeight(), true)
+            }
+            setMoviePosterSize()
+        }
     }
 
     private fun observeMovieDetails() {
@@ -216,7 +222,6 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
     }
 
     private fun enableTrailerButton(url: String) = with(binding) {
-        civPlayButton.show()
         civPlayButton.setOnClickListener {
             MovieFragmentDirections.actionMovieFragmentToTrailerFragment(url).also { direction ->
                 findNavController().navigate(direction)
