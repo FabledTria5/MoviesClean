@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_130sdp"
+    android:layout_marginBottom="@dimen/_15sdp">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/selection_image"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/sample" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_30sdp"
+        android:background="#44000000"
+        android:gravity="center_vertical|start"
+        android:paddingHorizontal="@dimen/_15sdp"
+        android:paddingVertical="@dimen/_5sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_regular"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14ssp"
+            tools:text="A24 Studio Films" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

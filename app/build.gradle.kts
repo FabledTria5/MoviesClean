@@ -55,7 +55,6 @@ dependencies {
     implementation(dependencyNotation = Dependencies.constraint)
     implementation(dependencyNotation = Dependencies.sdp)
     implementation(dependencyNotation = Dependencies.ssp)
-    implementation(dependencyNotation = Dependencies.expandable_text)
     implementation(dependencyNotation = Dependencies.coil)
     implementation(dependencyNotation = Dependencies.circular_image_view)
     implementation(dependencyNotation = Dependencies.swipe_reveal)

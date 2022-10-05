@@ -9,4 +9,4 @@
     android:elevation="@dimen/_5sdp"
     android:scaleType="centerCrop"
     android:transitionName="homeMoviePoster"
-    tools:src="@color/Salmon" />
+    tools:src="@drawable/sample" />

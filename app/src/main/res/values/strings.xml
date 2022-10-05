@@ -12,7 +12,7 @@
     <string name="movie_poster">Movie poster</string>
     <string name="want">Want</string>
     <string name="watched">Watched</string>
-    <string name="tv_shows">TV Shows</string>
+    <string name="selections">Selections</string>
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="trending_error_message">Error while receiving latest releases(</string>
     <string name="trending_error_icon">Trending error icon</string>
@@ -54,4 +54,5 @@
     <string name="movies_counter">%1$d Movies</string>
     <string name="option_is_checked">Option is checked</string>
     <string name="empty_movie_message">You have not added any movies yet</string>
+    <string name="selection_image">Selection image</string>
 </resources>

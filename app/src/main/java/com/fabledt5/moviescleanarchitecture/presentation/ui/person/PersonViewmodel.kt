@@ -3,9 +3,9 @@ package com.fabledt5.moviescleanarchitecture.presentation.ui.person
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.fabledt5.moviescleanarchitecture.domain.model.Resource
 import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.model.items.PersonItem
-import com.fabledt5.moviescleanarchitecture.domain.model.Resource
 import com.fabledt5.moviescleanarchitecture.domain.use_case.person_details.GetPersonCredits
 import com.fabledt5.moviescleanarchitecture.domain.use_case.person_details.GetPersonDetails
 import com.fabledt5.moviescleanarchitecture.domain.use_case.person_details.IsPersonFavorite
@@ -19,13 +19,32 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class PersonViewmodel(
+class PersonViewmodel @AssistedInject constructor(
+    @Assisted private val personId: Int,
     getPersonDetails: GetPersonDetails,
     private val getPersonCredits: GetPersonCredits,
-    private val personId: Int,
     private val savePerson: SavePerson,
     private val isPersonFavorite: IsPersonFavorite,
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(personId: Int): PersonViewmodel
+    }
+
+    companion object {
+        fun provideFactory(
+            assistedFactory: Factory,
+            personId: Int
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(personId) as T
+            }
+
+        }
+    }
 
     private val _personDetails = MutableStateFlow<Resource<PersonItem>>(Resource.Loading)
     val personDetails = _personDetails.asStateFlow()
@@ -57,32 +76,6 @@ class PersonViewmodel(
             (_personDetails.value as Resource.Success).let {
                 savePerson(it.data)
             }
-    }
-
-    class PersonViewmodelFactory @AssistedInject constructor(
-        @Assisted(value = "personId") private val personId: Int,
-        private val getPersonDetails: GetPersonDetails,
-        private val getPersonCredits: GetPersonCredits,
-        private val savePerson: SavePerson,
-        private val isPersonFavorite: IsPersonFavorite,
-    ) : ViewModelProvider.Factory {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return PersonViewmodel(
-                getPersonDetails,
-                getPersonCredits,
-                personId,
-                savePerson,
-                isPersonFavorite
-            ) as T
-        }
-
-        @AssistedFactory
-        interface Factory {
-            fun create(@Assisted(value = "personId") personId: Int): PersonViewmodelFactory
-        }
-
     }
 
 }
