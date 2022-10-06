@@ -155,6 +155,7 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
                     MovieType.WATCHED -> selectWatchButton()
                     MovieType.WANT -> selectWantButton()
                     MovieType.NONE -> clearButtons()
+                    else -> Unit
                 }
             }.launchWhenStarted(lifecycleScope)
 

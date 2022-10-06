@@ -7,7 +7,6 @@ import com.fabledt5.moviescleanarchitecture.data.api.dto.movie_videos.MovieVideo
 import com.fabledt5.moviescleanarchitecture.data.api.dto.person_credits.PersonCreditsResponse
 import com.fabledt5.moviescleanarchitecture.data.api.dto.person_details.PersonDetailsResponse
 import com.fabledt5.moviescleanarchitecture.data.api.dto.person_search.PersonSearchResponse
-import com.fabledt5.moviescleanarchitecture.data.api.dto.trending.TrendingResponse
 import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
 import com.fabledt5.moviescleanarchitecture.domain.model.items.PersonItem
 import com.fabledt5.moviescleanarchitecture.domain.util.Constants.API_IMAGE_PREFIX
@@ -17,14 +16,6 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-
-@JvmName("toDomainTrendingMoviesResponse")
-fun TrendingResponse.toDomain(): List<MovieItem> = trendingResults.map { result ->
-    MovieItem(
-        movieId = result.id,
-        moviePoster = "$API_IMAGE_PREFIX${result.posterPath}"
-    )
-}
 
 @JvmName("toDomainMovieDetailsResponse")
 fun MovieDetailsResponse.toDomain(): MovieItem = MovieItem(

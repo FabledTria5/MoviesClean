@@ -9,7 +9,7 @@ import com.fabledt5.moviescleanarchitecture.data.db.entity.PersonEntity
 
 @Database(
     entities = [MovieEntity::class, PersonEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(TypeConverter::class)

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.fabledt5.moviescleanarchitecture"
+    namespace = Config.applicationId
     compileSdk = Config.compileSdk
 
     defaultConfig {
@@ -31,6 +31,8 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+
         sourceCompatibility = Config.javaVersion
         targetCompatibility = Config.javaVersion
     }
@@ -49,6 +51,7 @@ dependencies {
     implementation(dependencyNotation = Dependencies.paging)
     implementation(dependencyNotation = Dependencies.android_fragments)
     implementation(dependencyNotation = Dependencies.core_splash_screen)
+    coreLibraryDesugaring(dependencyNotation = Dependencies.desugaring)
 
     // Design
     implementation(dependencyNotation = Dependencies.appcompat)

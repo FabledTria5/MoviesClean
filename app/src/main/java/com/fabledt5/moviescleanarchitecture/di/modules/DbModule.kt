@@ -2,7 +2,6 @@ package com.fabledt5.moviescleanarchitecture.di.modules
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.fabledt5.moviescleanarchitecture.data.db.MoviesDatabase
 import com.fabledt5.moviescleanarchitecture.data.db.dao.MoviesDao
 import com.fabledt5.moviescleanarchitecture.domain.util.Constants.DATABASE_NAME
@@ -15,8 +14,9 @@ object DbModule {
 
     @Singleton
     @Provides
-    fun provideMoviesDatabase(context: Context): MoviesDatabase =
-        Room.databaseBuilder(context, MoviesDatabase::class.java, DATABASE_NAME).build()
+    fun provideMoviesDatabase(context: Context): MoviesDatabase = Room
+        .databaseBuilder(context, MoviesDatabase::class.java, DATABASE_NAME)
+        .build()
 
     @Singleton
     @Provides

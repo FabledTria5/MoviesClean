@@ -1,9 +1,9 @@
 package com.fabledt5.moviescleanarchitecture.presentation.utils.network
 
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.Flow
 
 interface NetworkStatusListener {
 
-    val networkStatus: SharedFlow<NetworkStatus>
+    val networkStatus: Flow<NetworkStatus>
 
 }

@@ -1,8 +1,9 @@
 package com.fabledt5.moviescleanarchitecture.domain.repository
 
 import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
+import kotlinx.coroutines.flow.Flow
 
 interface ExploreRepository {
-    suspend fun getTrendingMovies(): List<MovieItem>?
-    suspend fun getTrendingShows(): List<MovieItem>?
+    fun getTrendingMovies(): Flow<List<MovieItem>>
+
 }

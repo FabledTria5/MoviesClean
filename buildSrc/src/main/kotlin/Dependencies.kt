@@ -11,6 +11,7 @@ internal object Versions {
     const val paging = "3.2.0-alpha02"
     const val android_fragments = "1.6.0-alpha02"
     const val core_splash_screen = "1.0.0"
+    const val desugaring = "1.1.5"
 
     // Design
     const val appcompat = "1.6.0-rc01"
@@ -60,6 +61,7 @@ object Dependencies {
     const val paging = "androidx.paging:paging-runtime:${Versions.paging}"
     const val android_fragments = "androidx.fragment:fragment-ktx:${Versions.android_fragments}"
     const val core_splash_screen = "androidx.core:core-splashscreen:${Versions.core_splash_screen}"
+    const val desugaring = "com.android.tools:desugar_jdk_libs:${Versions.desugaring}"
 
     // Design
     const val appcompat = "androidx.appcompat:appcompat:${Versions.appcompat}"

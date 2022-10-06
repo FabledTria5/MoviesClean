@@ -15,10 +15,8 @@ import retrofit2.http.Query
 
 interface MoviesApi {
 
-    @GET(value = "3/trending/{media_type}/week")
-    suspend fun getTrendingContent(
-        @Path(value = "media_type") mediaType: String,
-    ): TrendingResponse
+    @GET(value = "3/trending/movie/week")
+    suspend fun getTrendingMovies(): TrendingResponse
 
     @GET(value = "3/movie/{movie_id}")
     suspend fun getMovieDetails(

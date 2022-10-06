@@ -7,6 +7,7 @@ import com.fabledt5.moviescleanarchitecture.domain.model.items.PersonItem
 import com.fabledt5.moviescleanarchitecture.domain.util.MovieType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 
 @JvmName("toEntityMovieItem")
 fun MovieItem.toEntity(movieType: MovieType, movieDbId: Int) = MovieEntity(
@@ -18,7 +19,8 @@ fun MovieItem.toEntity(movieType: MovieType, movieDbId: Int) = MovieEntity(
     movieTitle = movieTitle,
     movieRelease = movieRelease,
     movieCountry = movieCountry,
-    movieRuntime = movieRuntime
+    movieRuntime = movieRuntime,
+    createdAt = LocalDate.now().toEpochDay()
 )
 
 @JvmName("toEntityPersonItem")

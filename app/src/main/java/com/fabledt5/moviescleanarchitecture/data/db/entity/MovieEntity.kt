@@ -15,15 +15,17 @@ data class MovieEntity(
     @ColumnInfo(name = "movie_type")
     val movieType: MovieType,
     @ColumnInfo(name = "movie_poster")
-    val moviePoster: String?,
+    val moviePoster: String? = null,
     @ColumnInfo(name = "movie_rating")
-    val movieRating: Float,
+    val movieRating: Float = 0f,
     @ColumnInfo(name = "movie_title")
-    val movieTitle: String,
+    val movieTitle: String = "",
     @ColumnInfo(name = "movie_release")
-    val movieRelease: String,
+    val movieRelease: String = "",
     @ColumnInfo(name = "movie_country")
-    val movieCountry: String,
+    val movieCountry: String = "",
     @ColumnInfo(name = "movie_runtime")
-    val movieRuntime: String
+    val movieRuntime: String = "",
+    @ColumnInfo(name = "created_at")
+    val createdAt: Long
 )

@@ -13,6 +13,9 @@ interface MoviesDao {
     suspend fun insertMovie(movieEntity: MovieEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMovies(moviesList: List<MovieEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPerson(personEntity: PersonEntity)
 
     @Query(value = "DELETE FROM movies_table WHERE movie_id = :movieId")
