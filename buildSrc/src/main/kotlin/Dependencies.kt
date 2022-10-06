@@ -20,7 +20,7 @@ internal object Versions {
     const val coil = "2.2.1"
     const val flexbox = "3.0.0"
     const val circular_image_view = "4.3.1"
-    const val youtube_player = "10.0.5"
+    const val youtube_player = "11.1.0"
     const val image_cropper = "4.3.2"
     const val swipe_reveal = "1.1.2"
 
@@ -72,7 +72,7 @@ object Dependencies {
     const val circular_image_view =
         "com.mikhaellopez:circularimageview:${Versions.circular_image_view}"
     const val youtube_player =
-        "com.github.PierfrancescoSoffritti.android-youtube-player:chromecast-sender:${Versions.youtube_player}"
+        "com.pierfrancescosoffritti.androidyoutubeplayer:core:${Versions.youtube_player}"
     const val image_cropper = "com.github.CanHub:Android-Image-Cropper:${Versions.image_cropper}"
     const val swipe_reveal = "com.apachat:swipereveallayout-android:${Versions.swipe_reveal}"
 

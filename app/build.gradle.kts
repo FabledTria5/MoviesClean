@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    namespace = "com.fabledt5.moviescleanarchitecture"
     compileSdk = Config.compileSdk
 
     defaultConfig {

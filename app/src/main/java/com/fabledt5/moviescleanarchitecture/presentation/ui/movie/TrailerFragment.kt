@@ -40,6 +40,7 @@ class TrailerFragment : Fragment(R.layout.fragment_trailer) {
 
     override fun onDestroy() {
         super.onDestroy()
+
         binding.youtubePlayer.release()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
