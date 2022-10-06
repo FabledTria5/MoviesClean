@@ -17,11 +17,10 @@ internal object Versions {
     const val material = "1.8.0-alpha01"
     const val constraint = "2.2.0-alpha04"
     const val ssu = "1.1.0"
-    const val expandableText = "1.0.5"
     const val coil = "2.2.1"
     const val flexbox = "3.0.0"
     const val circular_image_view = "4.3.1"
-    const val youtube_player = "10.0.5"
+    const val youtube_player = "11.1.0"
     const val image_cropper = "4.3.2"
     const val swipe_reveal = "1.1.2"
 
@@ -68,13 +67,12 @@ object Dependencies {
     const val constraint = "androidx.constraintlayout:constraintlayout:${Versions.constraint}"
     const val sdp = "com.intuit.sdp:sdp-android:${Versions.ssu}"
     const val ssp = "com.intuit.ssp:ssp-android:${Versions.ssu}"
-    const val expandable_text = "at.blogc:expandabletextview:${Versions.expandableText}"
     const val coil = "io.coil-kt:coil:${Versions.coil}"
     const val flexbox_layout = "com.google.android.flexbox:flexbox:${Versions.flexbox}"
     const val circular_image_view =
         "com.mikhaellopez:circularimageview:${Versions.circular_image_view}"
     const val youtube_player =
-        "com.github.PierfrancescoSoffritti.android-youtube-player:chromecast-sender:${Versions.youtube_player}"
+        "com.pierfrancescosoffritti.androidyoutubeplayer:core:${Versions.youtube_player}"
     const val image_cropper = "com.github.CanHub:Android-Image-Cropper:${Versions.image_cropper}"
     const val swipe_reveal = "com.apachat:swipereveallayout-android:${Versions.swipe_reveal}"
 

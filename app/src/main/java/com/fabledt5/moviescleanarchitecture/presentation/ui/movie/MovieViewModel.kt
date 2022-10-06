@@ -12,38 +12,33 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@OptIn(FlowPreview::class)
 class MovieViewModel @AssistedInject constructor(
     @Assisted movieId: Int,
-    @Assisted moviePoster: String?,
     private val movieCases: MovieCases
 ) : ViewModel() {
 
     @AssistedFactory
     interface Factory {
-        fun create(movieId: Int, moviePoster: String?): MovieViewModel
+        fun create(movieId: Int): MovieViewModel
     }
 
     companion object {
         fun provideFactory(
             assistedFactory: Factory,
             movieId: Int,
-            moviePoster: String?
-        ) : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
 
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(movieId, moviePoster) as T
+                return assistedFactory.create(movieId) as T
             }
 
         }
@@ -51,9 +46,6 @@ class MovieViewModel @AssistedInject constructor(
 
     private val _movieDetails = MutableStateFlow<Resource<MovieItem>>(value = Resource.Loading)
     val movieDetails = _movieDetails.asStateFlow()
-
-    private val _moviePoster = MutableStateFlow<String?>(value = null)
-    val moviePoster = _moviePoster.asStateFlow()
 
     private val _movieCast =
         MutableStateFlow<Resource<List<PersonItem>>>(value = Resource.Loading)
@@ -70,7 +62,6 @@ class MovieViewModel @AssistedInject constructor(
     val movieType = _movieType.asStateFlow()
 
     init {
-        _moviePoster.update { moviePoster }
         getMovieInfo(movieId = movieId)
         observeMovieType(movieId = movieId)
     }
@@ -89,7 +80,6 @@ class MovieViewModel @AssistedInject constructor(
 
     private fun getMovieInfo(movieId: Int) {
         movieCases.getMovieDetails(movieId = movieId)
-            .debounce(timeoutMillis = 1000)
             .onEach { movie ->
                 _movieDetails.update { movie }
             }
@@ -97,7 +87,6 @@ class MovieViewModel @AssistedInject constructor(
             .launchIn(viewModelScope)
 
         movieCases.getMovieCast(movieId = movieId)
-            .debounce(timeoutMillis = 1000)
             .onEach { cast ->
                 _movieCast.update { cast }
             }
@@ -105,7 +94,6 @@ class MovieViewModel @AssistedInject constructor(
             .launchIn(viewModelScope)
 
         movieCases.getSimilarMovies(movieId = movieId)
-            .debounce(timeoutMillis = 1000)
             .onEach { movies ->
                 _similarMovies.update { movies }
             }
@@ -113,7 +101,6 @@ class MovieViewModel @AssistedInject constructor(
             .launchIn(viewModelScope)
 
         movieCases.getMovieTrailer(movieId = movieId)
-            .debounce(timeoutMillis = 1000)
             .onEach { trailerPath ->
                 _movieTrailer.update { trailerPath }
             }

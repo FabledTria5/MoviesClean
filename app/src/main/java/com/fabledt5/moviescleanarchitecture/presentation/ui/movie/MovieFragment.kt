@@ -1,11 +1,14 @@
 package com.fabledt5.moviescleanarchitecture.presentation.ui.movie
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -46,8 +49,7 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         factoryProducer = {
             MovieViewModel.provideFactory(
                 movieViewModelFactory,
-                navArgs.movieId,
-                navArgs.moviePoster
+                navArgs.movieId
             )
         }
     )
@@ -70,13 +72,6 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         }
     }
 
-    private val moviePosterSizeChangeListener =
-        View.OnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
-            if (bottom != top) {
-                binding.civPlayButton.animateAlpha(targetAlpha = 1f)
-            }
-        }
-
     private val genresAdapter by lazy(LazyThreadSafetyMode.NONE) {
         MovieGenresAdapter()
     }
@@ -89,6 +84,24 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         SimilarMoviesListAdapter(onSimilarMoviesClickListener)
     }
 
+    private val movieDetailsBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+        get() = BottomSheetBehavior.from(binding.movieDetailsBottomSheet.bottomSheet)
+
+    private val moviePosterSizeChangeListener =
+        View.OnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
+            if (bottom != top) {
+                binding.civPlayButton.animateAlpha(targetAlpha = 1f)
+            }
+        }
+
+    private val movieOverviewSizeChangeListener =
+        View.OnLayoutChangeListener { _, _, top, _, _, _, _, _, _ ->
+            if (top != 0 && binding.movieDetailsBottomSheet.tvMovieTitle.text.isNotEmpty()) {
+                movieDetailsBottomSheetBehavior.peekHeight = top + 15
+                setMoviePosterSize()
+            }
+        }
+
     override fun onAttach(context: Context) {
         context.applicationComponent.inject(this)
         super.onAttach(context)
@@ -100,39 +113,33 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
         observeMovieDetails()
     }
 
-    private fun initUi() = with(binding.movieDetailsBottomSheet) {
-        rvCast.adapter = movieCastAdapter
-        rvCast.setDrawableDivider(R.drawable.lists_divider)
+    private fun initUi() {
+        binding.ivImagePoster.load(navArgs.moviePoster) {
+            crossfade(true)
+            error(R.drawable.poster_placeholder)
+        }
 
-        rvGenres.adapter = genresAdapter
-        rvGenres.setDrawableDivider(R.drawable.lists_divider)
+        with(binding.movieDetailsBottomSheet) {
+            rvCast.adapter = movieCastAdapter
+            rvCast.setDrawableDivider(R.drawable.lists_divider)
 
-        rvMoreLikeThis.adapter = similarMoviesAdapter
-        rvMoreLikeThis.setDrawableDivider(R.drawable.lists_divider)
+            rvGenres.adapter = genresAdapter
+            rvGenres.setDrawableDivider(R.drawable.lists_divider)
+
+            rvMoreLikeThis.adapter = similarMoviesAdapter
+            rvMoreLikeThis.setDrawableDivider(R.drawable.lists_divider)
+        }
     }
 
     private fun setupListeners() = with(binding.movieDetailsBottomSheet) {
         btnWant.setOnClickListener { movieViewModel.addMovieToWanted() }
         btnWatched.setOnClickListener { movieViewModel.addMovieToWatched() }
 
+        tvMovieOverview.addOnLayoutChangeListener(movieOverviewSizeChangeListener)
         binding.ivImagePoster.addOnLayoutChangeListener(moviePosterSizeChangeListener)
-        
-        tvMovieName.doAfterTextChanged {
-            BottomSheetBehavior.from(binding.movieDetailsBottomSheet.bottomSheet).apply {
-                setPeekHeight(calculateBottomSheetPeekHeight(), true)
-            }
-            setMoviePosterSize()
-        }
     }
 
     private fun observeMovieDetails() {
-        movieViewModel.moviePoster
-            .onEach { poster ->
-                binding.ivImagePoster.load(poster) {
-                    error(R.drawable.poster_placeholder)
-                }
-            }.launchWhenStarted(lifecycleScope)
-
         movieViewModel.movieDetails
             .onEach { result ->
                 when (result) {
@@ -191,7 +198,7 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
 
     private fun showResult(movie: MovieItem?) = with(binding.movieDetailsBottomSheet) {
         movie?.let {
-            tvMovieName.text = it.movieTitle
+            tvMovieTitle.text = it.movieTitle
             tvMovieReleaseYear.text = it.movieRelease
             tvMovieCountry.text = it.movieCountry
             tvMovieDuration.text = it.movieRuntime
@@ -211,8 +218,10 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
     }
 
     private fun setMoviePosterSize() {
-        val bottomSheetPeekHeight =
-            BottomSheetBehavior.from(binding.movieDetailsBottomSheet.bottomSheet).peekHeight
+        val bottomSheetPeekHeight = movieDetailsBottomSheetBehavior.peekHeight
+
+        if (bottomSheetPeekHeight == 0) return
+
         val screenHeight = resources.displayMetrics.heightPixels
         val imageAvailableSpace = screenHeight -
                 bottomSheetPeekHeight -
@@ -223,14 +232,17 @@ class MovieFragment : Fragment(R.layout.fragment_movie) {
 
     private fun enableTrailerButton(url: String) = with(binding) {
         civPlayButton.setOnClickListener {
-            MovieFragmentDirections.actionMovieFragmentToTrailerFragment(url).also { direction ->
-                findNavController().navigate(direction)
+            val youtubeIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:$url"))
+            try {
+                context?.startActivity(youtubeIntent)
+            } catch (exception: ActivityNotFoundException) {
+                MovieFragmentDirections.actionMovieFragmentToTrailerFragment(url)
+                    .also { direction ->
+                        findNavController().navigate(direction)
+                    }
             }
         }
     }
-
-    private fun calculateBottomSheetPeekHeight() =
-        binding.movieDetailsBottomSheet.tvMovieOverview.top
 
     private fun clearButtons() = with(binding.movieDetailsBottomSheet) {
         val tintList =

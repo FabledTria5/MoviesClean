@@ -5,6 +5,7 @@ import com.fabledt5.moviescleanarchitecture.MainActivity
 import com.fabledt5.moviescleanarchitecture.di.modules.AppModule
 import com.fabledt5.moviescleanarchitecture.presentation.ui.home.HomeFragment
 import com.fabledt5.moviescleanarchitecture.presentation.ui.home.MoviesFragment
+import com.fabledt5.moviescleanarchitecture.presentation.ui.home.SelectionsFragment
 import com.fabledt5.moviescleanarchitecture.presentation.ui.movie.MovieFragment
 import com.fabledt5.moviescleanarchitecture.presentation.ui.person.PersonFragment
 import com.fabledt5.moviescleanarchitecture.presentation.ui.profile.FilterFragment
@@ -20,11 +21,13 @@ import javax.inject.Singleton
 @Singleton
 interface AppComponent {
 
+    fun inject(mainActivity: MainActivity)
+
     fun inject(homeFragment: HomeFragment)
 
-    fun inject(MoviesFragment: MoviesFragment)
+    fun inject(moviesFragment: MoviesFragment)
 
-    fun inject(mainActivity: MainActivity)
+    fun inject(selectionsFragment: SelectionsFragment)
 
     fun inject(searchFragment: SearchFragment)
 

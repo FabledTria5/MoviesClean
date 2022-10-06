@@ -14,26 +14,16 @@ import com.fabledt5.moviescleanarchitecture.R
 import com.fabledt5.moviescleanarchitecture.databinding.FragmentMoviesBinding
 import com.fabledt5.moviescleanarchitecture.domain.model.Resource
 import com.fabledt5.moviescleanarchitecture.domain.model.items.MovieItem
-import com.fabledt5.moviescleanarchitecture.domain.util.MediaType
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.listeners.OnMovieClickListener
 import com.fabledt5.moviescleanarchitecture.presentation.adapters.lists.HomeMoviesListAdapter
 import com.fabledt5.moviescleanarchitecture.presentation.utils.MultiViewModelFactory
 import com.fabledt5.moviescleanarchitecture.presentation.utils.animateAlpha
 import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
-import com.fabledt5.moviescleanarchitecture.presentation.utils.arguments
 import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 import javax.inject.Inject
 
 class MoviesFragment : Fragment(R.layout.fragment_movies) {
-
-    companion object {
-        private const val CONTENT_TYPE = "contentType"
-
-        fun newInstance(contentType: MediaType) =
-            MoviesFragment().arguments(CONTENT_TYPE to contentType.name)
-    }
 
     @Inject
     lateinit var viewmodelFactory: MultiViewModelFactory
@@ -45,10 +35,7 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
 
     private val onContentClickListener = object : OnMovieClickListener {
         override fun onMovieClick(movieId: Int, moviePoster: String?) {
-            when (contentType) {
-                MediaType.movie -> navigateToMoviePage(movieId, moviePoster)
-                MediaType.tv -> navigateToTvShowPage(movieId, moviePoster)
-            }
+            navigateToMoviePage(movieId, moviePoster)
         }
     }
 
@@ -57,8 +44,6 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
     private val adapter by lazy(LazyThreadSafetyMode.NONE) {
         HomeMoviesListAdapter(onMovieClickListener = onContentClickListener)
     }
-
-    private var contentType = MediaType.movie
 
     override fun onAttach(context: Context) {
         context.applicationComponent.inject(this)
@@ -75,26 +60,10 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
     }
 
     private fun startObserve() {
-        val contentSource = when (requireArguments().getString(CONTENT_TYPE)) {
-            MediaType.movie.name -> homeViewModel.trendingMovies
-            MediaType.tv.name -> {
-                contentType = MediaType.tv
-                homeViewModel.trendingShows
-            }
-
-            else -> {
-                Timber.e(
-                    message = "Error with received arguments: ${
-                        requireArguments().getString(CONTENT_TYPE)
-                    }"
-                )
-                return
-            }
-        }
-
-        contentSource.onEach { result ->
-            setResult(result)
-        }.launchWhenStarted(lifecycleScope)
+        homeViewModel.trendingMovies
+            .onEach { result ->
+                setResult(result)
+            }.launchWhenStarted(lifecycleScope)
     }
 
     private fun setResult(result: Resource<List<MovieItem>>) {
@@ -133,12 +102,5 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
         HomeFragmentDirections.actionOpenMovie(contentId, contentPoster).also { direction ->
             findNavController().navigate(direction)
         }
-    }
-
-    private fun navigateToTvShowPage(
-        contentId: Int,
-        contentPoster: String?
-    ) {
-        // TODO: 02.11.2021
     }
 }

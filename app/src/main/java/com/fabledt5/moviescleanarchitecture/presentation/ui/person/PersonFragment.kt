@@ -23,7 +23,6 @@ import com.fabledt5.moviescleanarchitecture.presentation.utils.GrayScaleTransfor
 import com.fabledt5.moviescleanarchitecture.presentation.utils.animateAlpha
 import com.fabledt5.moviescleanarchitecture.presentation.utils.applicationComponent
 import com.fabledt5.moviescleanarchitecture.presentation.utils.launchWhenStarted
-import com.fabledt5.moviescleanarchitecture.presentation.utils.rotate
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
@@ -33,24 +32,21 @@ import javax.inject.Inject
 class PersonFragment : BottomSheetDialogFragment() {
 
     @Inject
-    lateinit var personViewModelFactory: PersonViewmodel.PersonViewmodelFactory.Factory
+    lateinit var personViewModelFactory: PersonViewmodel.Factory
 
     private var _binding: FragmentPersonBinding? = null
     private val binding get() = _binding!!
 
     private val navArgs: PersonFragmentArgs by navArgs()
 
-    private val personViewModel: PersonViewmodel by viewModels {
-        personViewModelFactory.create(personId = navArgs.personId)
-    }
-
-    private val expandBiographyListener = View.OnClickListener {
-        with(binding) {
-            if (tvPersonBiography.isExpanded) tvPersonBiography.collapse()
-            else tvPersonBiography.expand()
-            ivShowMoreText.rotate(angle = 180f)
+    private val personViewModel: PersonViewmodel by viewModels(
+        factoryProducer = {
+            PersonViewmodel.provideFactory(
+                personViewModelFactory,
+                navArgs.personId
+            )
         }
-    }
+    )
 
     private val onMovieClickListener = object : OnMovieClickListener {
         override fun onMovieClick(movieId: Int, moviePoster: String?) {
@@ -99,11 +95,7 @@ class PersonFragment : BottomSheetDialogFragment() {
     }
 
     private fun setupListeners() {
-        binding.ivAddToFavorite.setOnClickListener {
-            personViewModel.savePerson()
-        }
-
-        binding.ivShowMoreText.setOnClickListener(expandBiographyListener)
+        binding.ivAddToFavorite.setOnClickListener { personViewModel.savePerson() }
     }
 
     private fun observePerson() {
@@ -155,8 +147,6 @@ class PersonFragment : BottomSheetDialogFragment() {
         }
         personLoadingIndicator.hide()
         groupMainContent.isVisible = true
-
-        ivShowMoreText.isVisible = personData?.personBiography?.isNotEmpty() == true
     }
 
     private fun showPersonCredits(credits: List<MovieItem>?) {

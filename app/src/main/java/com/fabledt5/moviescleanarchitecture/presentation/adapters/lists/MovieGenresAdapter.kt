@@ -34,11 +34,6 @@ class MovieGenresAdapter(private val genresList: ArrayList<String> = arrayListOf
     override fun getItemCount() = genresList.count()
 
     fun setItems(genres: List<String>) {
-        if (genresList.isNotEmpty()) {
-            val size = genresList.size
-            genresList.clear()
-            notifyItemRangeRemoved(0, size)
-        }
         genresList.addAll(genres)
         notifyItemRangeChanged(0, genres.size)
     }

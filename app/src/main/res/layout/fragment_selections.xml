@@ -2,13 +2,12 @@
 <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rvFavoritePeople"
+    android:id="@+id/rvSelections"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:alpha="0"
     android:clipToPadding="false"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/_15sdp"
+    android:paddingVertical="@dimen/_10sdp"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-    tools:alpha="1"
-    tools:listitem="@layout/item_favorite_person" />
+    tools:listitem="@layout/item_selection" />

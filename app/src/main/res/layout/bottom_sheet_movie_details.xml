@@ -45,7 +45,7 @@
                 app:constraint_referenced_ids="imageView,tvMovieReleaseYear,
                 rvCast,materialTextView4,btnWant,rvMoreLikeThis,materialTextView3,
                 tvMovieCountry,materialTextView2,materialTextView5,btnWatched,tvMovieDuration,
-                tvMovieName,tvMovieRating,tvMovieOverview,rvGenres"
+                tvMovieTitle,tvMovieRating,tvMovieOverview,rvGenres"
                 tools:visibility="visible" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -76,7 +76,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvMovieName"
+                android:id="@+id/tvMovieTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15sdp"
@@ -86,6 +86,8 @@
                 android:letterSpacing="0.05"
                 android:maxWidth="@dimen/_200sdp"
                 android:maxLines="2"
+                android:scrollbars="vertical"
+                android:scrollHorizontally="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_17ssp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -111,9 +113,9 @@
                 android:fontFamily="@font/sf_pro_medium"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_17ssp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvMovieName"
+                app:layout_constraintBottom_toBottomOf="@+id/tvMovieTitle"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tvMovieName"
+                app:layout_constraintTop_toTopOf="@+id/tvMovieTitle"
                 tools:text="7,2" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -125,8 +127,8 @@
                 android:fontFamily="@font/sf_pro_regular"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_11ssp"
-                app:layout_constraintStart_toStartOf="@+id/tvMovieName"
-                app:layout_constraintTop_toBottomOf="@+id/tvMovieName"
+                app:layout_constraintStart_toStartOf="@+id/tvMovieTitle"
+                app:layout_constraintTop_toBottomOf="@+id/tvMovieTitle"
                 tools:text="2015" />
 
             <com.google.android.material.textview.MaterialTextView

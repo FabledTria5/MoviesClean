@@ -31,7 +31,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         TabLayoutMediator(binding.homeTabs, binding.homePager) { tab, index ->
             when (index) {
                 0 -> tab.text = getString(R.string.movies)
-                1 -> tab.text = getString(R.string.tv_shows)
+                1 -> tab.text = getString(R.string.selections)
             }
         }.attach()
     }

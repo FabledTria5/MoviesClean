@@ -52,7 +52,6 @@
         android:id="@+id/rvContentList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0"
         android:clipToPadding="false"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/_15sdp"
